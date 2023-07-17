@@ -1,0 +1,65 @@
+-- SELECT ALL ROWS 
+SELECT *
+FROM [datajobs].[dbo].[DataAnalyst$]
+
+-- REMOVE UNNECESSARY COLUMNS
+ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+DROP COLUMN [rating],
+			[revenue],
+			[competitors],
+			[easy apply],
+			[type of ownership]
+
+
+-- remove glassdoor est in salary est 
+-- find patterns in job description
+-- remove numbers in column name 
+-- separate location into city, state 
+-- 
+
+-- location
+ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+ADD [Company City] Nvarchar(255);
+
+ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+ADD [Company State] Nvarchar(255);
+
+
+UPDATE[datajobs].[dbo].[DataAnalyst$]
+SET [Company City] = SUBSTRING(Location, 1,  CHARINDEX(',', Location) -1) 
+
+UPDATE[datajobs].[dbo].[DataAnalyst$]
+SET [Company State] = SUBSTRING(Location, CHARINDEX(',', Location) +1, LEN(Location))
+
+-- drop original location 
+ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+DROP COLUMN location
+
+
+SELECT count([Job Description]) as 'power BI mentions'
+FROM [datajobs].[dbo].[DataAnalyst$]
+WHERE
+(
+    [job description] LIKE '%power bi%'
+)
+
+SELECT count([Job Description]) as 'sql mentions'
+FROM [datajobs].[dbo].[DataAnalyst$]
+WHERE
+(
+    [job description] LIKE '%sql%'
+)
+
+SELECT (
+ SELECT count(*) ) AS 'test',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%power bi%' )) AS 'power BI mentions',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%sql%' )) AS 'sql mentions',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%power point%' )) AS 'power point mentions',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%python%' )) AS 'python mentions',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%excel%' )) AS 'excel',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Tableau%' )) AS 'Tableau',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%SAS%' )) AS 'SAS',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Java%' )) AS 'Java',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%ETL%' )) AS 'ETL'
+
+ 
