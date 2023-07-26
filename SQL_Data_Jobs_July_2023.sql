@@ -1,40 +1,22 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
---SELECT TOP (1000) [F1]
---      ,[Job Title]
---      ,[Salary Estimate]
---      ,[Job Description]
---      ,[Rating]
---      ,[Company Name]
---      ,[Location]
---      ,[Headquarters]
---      ,[Size]
---      ,[Founded]
---      ,[Type of ownership]
---      ,[Industry]
---      ,[Sector]
---      ,[Revenue]
---      ,[Competitors]
---      ,[Easy Apply]
---  FROM [datajobs].[dbo].[DataAnalyst$]
+-- Remove unnecessary fields 
+ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+DROP COLUMN [F1],
+	[rating],
+	[revenue],
+	[competitors],
+	[easy apply],
+	[type of ownership]
 
-
--- SELECT ALL ROWS 
-SELECT *
+-- Find duplicate records 
+SELECT [Job Description], COUNT([Job Description]) 
 FROM [datajobs].[dbo].[DataAnalyst$]
+GROUP BY [Job Description]
+HAVING COUNT([Job Description]) > 1
 
--- REmove unnecessary fields
-ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
-DROP COLUMN [rating],
-			[revenue],
-			[competitors],
-			[easy apply],
-			[type of ownership]
-
-
-
--- Create duplicate of salary for practice
-ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
-ADD [Setter] Nvarchar(255);
+-- Format Company Name
+UPDATE[datajobs].[dbo].[DataAnalyst$]
+SET [Company Name] = LEFT([Company Name], (LEN([Company Name]) - 3)) 
+WHERE [Company Name] LIKE '%.%';
 
 --to get rid of (glassdoor est.) in [salary estimate]
 UPDATE [datajobs].[dbo].[DataAnalyst$]
@@ -76,43 +58,42 @@ SET [Company City] = SUBSTRING(Location, 1,  CHARINDEX(',', Location) -1)
 UPDATE[datajobs].[dbo].[DataAnalyst$]
 SET [Company State] = SUBSTRING(Location, CHARINDEX(',', Location) + 1, LEN(Location))
 
-UPDATE[datajobs].[dbo].[DataAnalyst$]
-SET [Company State] = TRIM([Company State])
+-- Add location for practice 
+--ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+--ADD [Location] Nvarchar(255);
 
-
--- Add location
-ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
-ADD [Location] Nvarchar(255);
-
-UPDATE[datajobs].[dbo].[DataAnalyst$]
-SET [Location] = CONCAT(CONCAT([Company City], ',' )  ,  CONCAT(' ',[Company State] ));
+--UPDATE[datajobs].[dbo].[DataAnalyst$]
+--SET [Location] = CONCAT(CONCAT([Company City], ',' )  ,  CONCAT(' ',[Company State] ));
 
 -- drop original location 
-ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
-DROP COLUMN location
+--ALTER TABLE [datajobs].[dbo].[DataAnalyst$]
+--DROP COLUMN location
 
 -- Discovering common keywords 
 SELECT 
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%sql%' )) AS 'sql mentions',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%excel%' )) AS 'excel',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%python%' )) AS 'python mentions',
-	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%power bi%' )) AS 'power BI mentions',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Tableau%' )) AS 'Tableau',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%SAS%' )) AS 'SAS',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Java%' )) AS 'Java',
+	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%power bi%' )) AS 'power BI mentions',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '% R %' )) AS 'R mentions',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Azure%' )) AS 'Azure',
 	(SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%power point%' )) AS 'power point mentions'
 
 
--- discovering benefits and work life preferences
+-- Discovering benefits and work life preferences
 SELECT 
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%remote%' )) AS 'remote',
  (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%401K%' )) AS '401K',
- (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%hybrid%' )) AS 'hybrid',
- (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%remote%' )) AS 'remote'
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Health Insurance%' )) AS 'Health Insurance',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%dental Insurance%' )) AS 'dental Insurance',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%Pension%' )) AS 'Pension',
+ (SELECT count([Job Description]) FROM [datajobs].[dbo].[DataAnalyst$] WHERE ([job description] LIKE '%hybrid%' )) AS 'hybrid'
 
 
--- finding the average min and max salaries
+-- Finding the average min and max salaries
 SELECT AVG([Min Salary (in thousands)]) as 'Avg Min Salary', AVG([Max Salary (in thousands)]) as 'Avg Max Salary'
 FROM [datajobs].[dbo].[DataAnalyst$]
 
