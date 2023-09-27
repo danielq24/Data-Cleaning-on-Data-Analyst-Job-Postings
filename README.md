@@ -53,12 +53,15 @@ SET [Min Salary (in thousands)] = CAST(REPLACE(REPLACE(LEFT([Salary Estimate], C
 Data cleaning is essential for the job applications file as it ensures the data is accurate, consistent, and free from errors or anomalies. By meticulously cleaning and organizing the data, It improves data reliability and enables me to derive meaningful insights, leading to more informed decisions. 
 - Skills Keywords: Through filtering out the job descriptions, we can discover important key words such as skills to see which tools applicants should focus on:
   
-![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/98b06e27-1949-4914-a9b3-9d2ba91084cb)
+
+![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/7854511a-7c2d-462b-935b-5d9dbaf8c5ce)
 
 
 - Worklife balance & benefits:
 
-- ![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/911fc616-139c-455b-94af-3e5795a504c1)
+
+![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/2e941fe6-d353-4c60-8d9d-0d92031111c0)
+
 
 
 ### Data Cleaning Database Images
@@ -67,3 +70,5 @@ Before:
 After:
 ![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/b2b2f53d-782d-4a96-aee7-27e5ca578b7f)
 
+![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/98b06e27-1949-4914-a9b3-9d2ba91084cb)
+![image](https://github.com/danielq24/Data-Cleaning-on-Data-Analyst-Job-Postings/assets/123119481/67ce0c66-9dc7-4346-aaa2-70a8983a0d5e)
